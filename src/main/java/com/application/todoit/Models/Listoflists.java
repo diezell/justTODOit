@@ -6,10 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Table
+//@Data
 @ToString(of = {"id", "text"})
 @EqualsAndHashCode(of = {"id"})
 public class Listoflists {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

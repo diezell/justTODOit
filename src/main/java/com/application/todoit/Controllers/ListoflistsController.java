@@ -24,7 +24,7 @@ public class ListoflistsController {
         return listRepository.findAll();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Listoflists getOne (@PathVariable("id") Listoflists listoflists) {
         return listoflists;
     }
@@ -34,14 +34,14 @@ public class ListoflistsController {
         return listRepository.save(listoflists);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public Listoflists update (@PathVariable("id") Listoflists listFromDb,    // listFromDb - получаем из БД
             @RequestBody Listoflists listoflists) {                           // listoflists - список, который мы получаем от пользователя в виде JSON
         BeanUtils.copyProperties(listoflists, listFromDb, "id");  // этот метод копирует все поля из listoflists в listFromDb кроме поля id
         return listRepository.save(listFromDb);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void delete (@PathVariable("id") Listoflists listoflists) {
         listRepository.delete(listoflists);
     }
