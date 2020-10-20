@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -31,6 +32,7 @@ public class ListoflistsController {
 
     @PostMapping
     public Listoflists create (@RequestBody Listoflists listoflists) {
+        listoflists.setCreationDate(LocalDateTime.now());
         return listRepository.save(listoflists);
     }
 
