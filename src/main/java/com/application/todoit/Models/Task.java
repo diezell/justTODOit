@@ -8,37 +8,32 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table
-//@Data
-@ToString(of = {"idList", "name"})
-@EqualsAndHashCode(of = {"idList"})
-public class Listoflists {
+@ToString(of = {"idTask", "name"})
+@EqualsAndHashCode(of = {"idTask"})
+public class Task {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idList;
+    private Long idTask;
 
     private String name;
 
     private String description;
 
+    private Byte important;
+
+    private Boolean checkpoint;
+
     @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime creationDate;
 
-//    public Listoflists() {
-//    }
-//
-//    public Listoflists(long id, String name, String description) {
-//        this.id = id;
-//        this.name = name;
-//        this.description = description;
-//    }
-
-    public Long getIdList() {
-        return idList;
+    public Long getIdTask() {
+        return idTask;
     }
 
-    public void setIdList(Long idList) {
-        this.idList = idList;
+    public void setIdTask(Long idTask) {
+        this.idTask = idTask;
     }
 
     public String getName() {
@@ -55,6 +50,22 @@ public class Listoflists {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Byte getImportant() {
+        return important;
+    }
+
+    public void setImportant(Byte important) {
+        this.important = important;
+    }
+
+    public Boolean getCheckpoint() {
+        return checkpoint;
+    }
+
+    public void setCheckpoint(Boolean checkpoint) {
+        this.checkpoint = checkpoint;
     }
 
     public LocalDateTime getCreationDate() {
