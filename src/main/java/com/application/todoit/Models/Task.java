@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Table
@@ -27,6 +28,18 @@ public class Task {
     @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime creationDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Listoflists_ID")
+    private Listoflists listoflists;
+
+    public Listoflists getListoflists() {
+        return listoflists;
+    }
+
+    public void setListoflists(Listoflists listoflists) {
+        this.listoflists = listoflists;
+    }
 
     public Long getIdTask() {
         return idTask;

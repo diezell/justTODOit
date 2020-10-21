@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Table
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 public class Listoflists {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Listoflists_ID")
     private Long idList;
 
     private String name;
@@ -24,6 +26,10 @@ public class Listoflists {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime creationDate;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "listoflist")
+    private List<Task> tasks = new ArrayList<>();
+
+
 //    public Listoflists() {
 //    }
 //
@@ -32,6 +38,14 @@ public class Listoflists {
 //        this.name = name;
 //        this.description = description;
 //    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
 
     public Long getIdList() {
         return idList;
