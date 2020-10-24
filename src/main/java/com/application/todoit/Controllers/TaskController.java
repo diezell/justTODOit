@@ -2,6 +2,7 @@ package com.application.todoit.Controllers;
 
 import com.application.todoit.Interfaces.*;
 import com.application.todoit.Models.*;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("list/{idList}")
+@RequestMapping("/task")
 public class TaskController {
 
     private final TaskRepository taskRepository;
@@ -21,12 +22,16 @@ public class TaskController {
     }
 
     @GetMapping
+    @JsonView(Views.ShowField.class)
     public List<Task> tasks() {
+
         return taskRepository.findAll();
     }
 
     @GetMapping("/{idTask}")
+    @JsonView(Views.ShowField.class)
     public Task getOne (@PathVariable("idTask") Task task) {
+        task.getGetIdList();
         return task;
     }
 
