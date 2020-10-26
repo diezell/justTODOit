@@ -1,12 +1,11 @@
 package com.application.todoit.Controllers;
 
+import com.application.todoit.Exceptions.*;
 import com.application.todoit.Interfaces.*;
 import com.application.todoit.Models.*;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class TaskController {
     private final TaskRepository taskRepository;
 
     @Autowired
-    public TaskController(TaskRepository taskRepository) {
+    public TaskController (TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
@@ -36,16 +35,28 @@ public class TaskController {
     }
 
     @PostMapping
+    @JsonView(Views.ShowField.class)
     public Task create (@RequestBody Task task) {
+        if (task.getImportant() != null && task.getImportant() < 1 || task.getImportant() != null && task.getImportant() > 5) {
+            throw new ImportantIncorrectNumberException();
+        }
         task.setCreationDate(LocalDateTime.now());
+        task.setChangeDate(LocalDateTime.now());
         return taskRepository.save(task);
     }
 
     @PutMapping("/{idTask}")
-    public Task update (@PathVariable("idTask") Task taskFromDb,
+    @JsonView(Views.ShowField.class)
+    public Task update (@PathVariable("idTask") Task taskFromDb,                       //если прилетают 2 параметра, возможно поможет if()
             @RequestBody Task task) {
-        BeanUtils.copyProperties(task, taskFromDb, "idTask");
+        if (task.getCheckpoint() == null) {
+            throw new CheckpointNullException();
+        }
+        else {
+        taskFromDb.setCheckpoint(task.getCheckpoint());
+        taskFromDb.setChangeDate(LocalDateTime.now());
         return taskRepository.save(taskFromDb);
+        }
     }
 
     @DeleteMapping("/{idTask}")

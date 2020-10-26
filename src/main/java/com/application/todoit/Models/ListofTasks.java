@@ -3,6 +3,7 @@ package com.application.todoit.Models;
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -18,6 +19,7 @@ public class ListofTasks {
     @JsonView(Views.ShowField.class)
     private UUID idList;
 
+    @NotNull
     @JsonView(Views.ShowField.class)
     private String name;
 
@@ -29,8 +31,20 @@ public class ListofTasks {
     @JsonView(Views.ShowField.class)
     private LocalDateTime creationDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+    @JsonView(Views.ShowField.class)
+    private LocalDateTime changeDate;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "listofTasks")
     private List<Task> tasks = new ArrayList<>();
+
+    public LocalDateTime getChangeDate() {
+        return changeDate;
+    }
+
+    public void setChangeDate(LocalDateTime changeDate) {
+        this.changeDate = changeDate;
+    }
 
     public List<Task> getTasks() {
         return tasks;
