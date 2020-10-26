@@ -1,5 +1,8 @@
 package com.application.todoit.Exceptions;
 
+/**
+ * java-doc
+ */
 public class FieldValidationError {
 
     private String object;

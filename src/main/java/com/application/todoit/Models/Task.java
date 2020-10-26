@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Java - doc !!! и у полеё тоже
+ */
 @Entity
 @Table
 @ToString(of = {"idTask", "name"})
@@ -26,10 +29,11 @@ public class Task {
     private String description;
 
     @JsonView(Views.ShowField.class)
-    private Byte important;
+    private Byte important; // TODO: приоритет лучше переделать на перечисление
 
     @JsonView(Views.ShowField.class)
-    private Boolean checkpoint;
+    private Boolean checkpoint; // TODO: checkpoint - не вполне корректное название поля для "отметка о выполнении",
+    // но пусть остаётся, если что быстрый рефакторинг - встаём на поле и жмем shift+F6
 
     @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
@@ -41,12 +45,15 @@ public class Task {
     private LocalDateTime changeDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ListofTasks_ID")
-    private ListofTasks listofTasks;
+    @JoinColumn(name = "ListofTasks_ID") // TODO: поля в базе доблжны быть в формате xxx_jjj_jjj?
+    // не нужно смеживать с camelCase!!!
+    private ListofTasks listofTasks; // TODO: listOfTasks
 
     @JsonView(Views.ShowField.class)
-    private UUID getIdList;
+    private UUID getIdList; // TODO: Зачем нам это поле? у нас же есть родительский список заданий?
+    // от корого мы всегда сможем взять ID&
 
+    // TODO: всё что ниже легко решается через @Getter @Setter lomboka
     public LocalDateTime getChangeDate() {
         return changeDate;
     }

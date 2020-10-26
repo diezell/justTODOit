@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Java-doc
+ */
 @RestController
 @RequestMapping("/task")
 public class TaskController {
+
+    // TODO: замечения теже что и в другом контроллере - действия с репой вынести в сервис, сушности модели убрать и заменить на ДТО
 
     private final TaskRepository taskRepository;
 

@@ -11,11 +11,15 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * java-doc
+ */
 @RestController
 @RequestMapping("/list")
 public class ListofTasksController {
 
-    private final ListofTasksRepository listRepository;
+    private final ListofTasksRepository listRepository; // TODO: все действия с репозиториями нужно вынести в сервисы,
+    // приинжекченые через интерфейсы - таким образом мы конкретные реализации сможем легко подмерять
 
     @Autowired
     public ListofTasksController (ListofTasksRepository listRepository) {
@@ -24,13 +28,16 @@ public class ListofTasksController {
 
     @GetMapping
     @JsonView(Views.ShowField.class)
+    // TODO: тут и ниже конроллер ничего не должен знать о сущностях модели, соответственно ни принимать, ни отсылать их нельзя!
     public List<ListofTasks> listofTasks () {
         return listRepository.findAll();
     }
 
     @GetMapping("/{idList}")                                             //different way: public ListofTasks getOne (@PathVariable("idList") UUID responseId) { return this.listRepository.findById(responseId);
     @JsonView(Views.ShowField.class)
-    public ListofTasks getOne (@PathVariable("idList") ListofTasks listofTasks) {
+    public ListofTasks getOne (@PathVariable("idList") ListofTasks listofTasks) { // TODO: "idList" предполагает что
+        // придёт идентификатор, а не целый объект, и опятьже если у нас есть целый объект зачем нам по нему ещё что-то
+        // запрашивать
         if (listofTasks == null) {
             throw new ThereIsNoSuchListException();
         }
@@ -38,7 +45,7 @@ public class ListofTasksController {
     }
 
     @PostMapping
-    public ListofTasks create (@RequestBody ListofTasks listofTasks) {
+    public ListofTasks create (@RequestBody ListofTasks listofTasks) {// TODO: тоже вамое принимать нужно ДТО и даллее
         if (listofTasks.getName().isEmpty() || listofTasks.getName() == null) {
             throw new ThereIsIncorrectNameException();
         }

@@ -7,11 +7,14 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Java-doc
+ */
 @Entity
 @Table
 @ToString(of = {"idList", "name"})
 @EqualsAndHashCode(of = {"idList"})
-public class ListofTasks {
+public class ListofTasks { // TODO: camelCase с большой буквы ListOfTasks
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,6 +41,7 @@ public class ListofTasks {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "listofTasks")
     private List<Task> tasks = new ArrayList<>();
 
+    // TODO: всё что ниже легко решается через @Getter @Setter lomboka
     public LocalDateTime getChangeDate() {
         return changeDate;
     }
