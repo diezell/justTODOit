@@ -23,31 +23,25 @@ public class TaskController {
         this.iTaskService = iTaskService;
     }
 
-//    @GetMapping
-//    @JsonView(Views.ShowField.class)
-//    public List<Task> tasks() {
-//        return taskRepository.findAll();
-//    }
-
-    @GetMapping("/{id}")
+    @GetMapping("/{listId}/{id}")
     public TaskResponse getTask(@PathVariable("id") UUID taskId, @PathVariable("listId") UUID listId) throws NotFoundException {
         return iTaskService.getTask(taskId, listId);
     }
 
-    @PostMapping
+    @PostMapping("/{listId}")
     public TaskResponse createTask(@RequestBody @Valid CreateTaskRequest createTaskRequest,
             @PathVariable("listId") UUID listId) throws NotFoundException {
         return iTaskService.createTask(createTaskRequest, listId);
     }
 
-    @PutMapping("/{id}")               //скорее всего неправильно
+    @PutMapping("/{listId}/{id}")               //скорее всего неправильно
     public TaskResponse updateTask(@RequestBody @Valid ChangeTaskRequest changeTaskRequest,
             @PathVariable("id") UUID taskId,
             @PathVariable("listId") UUID listId) throws NotFoundException {
         return iTaskService.changeTask(changeTaskRequest, taskId, listId);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{listId}/{id}")
     public void deleteTask(@PathVariable("id") UUID taskId, @PathVariable("listId") UUID listId) throws NotFoundException {
         iTaskService.deleteTask(taskId, listId);
     }

@@ -29,7 +29,7 @@ public class ListOfTasksController {
         return iListService.getLists();
     }
 
-    @GetMapping("/{id}")                                //актуалочка
+    @GetMapping("/{id}")
     public FullTaskListResponse getList(@PathVariable("id") UUID listId) throws NotFoundException {
         return iListService.getList(listId);
     }
