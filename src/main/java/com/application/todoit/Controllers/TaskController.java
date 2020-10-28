@@ -1,67 +1,55 @@
 package com.application.todoit.Controllers;
 
-import com.application.todoit.Exceptions.*;
-import com.application.todoit.Interfaces.*;
-import com.application.todoit.Models.*;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.application.todoit.DtoTask.*;
+import com.application.todoit.Exceptions.NotFoundException;
+import com.application.todoit.Services.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
+import javax.validation.Valid;
+import java.util.UUID;
+
+/**
+ * Контроллер для запросов заданий
+ */
 @RestController
 @RequestMapping("/task")
 public class TaskController {
 
-    private final TaskRepository taskRepository;
+    private final ITaskService iTaskService;
 
     @Autowired
-    public TaskController (TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public TaskController(ITaskService iTaskService) {
+        this.iTaskService = iTaskService;
     }
 
-    @GetMapping
-    @JsonView(Views.ShowField.class)
-    public List<Task> tasks() {
+//    @GetMapping
+//    @JsonView(Views.ShowField.class)
+//    public List<Task> tasks() {
+//        return taskRepository.findAll();
+//    }
 
-        return taskRepository.findAll();
-    }
-
-    @GetMapping("/{idTask}")
-    @JsonView(Views.ShowField.class)
-    public Task getOne (@PathVariable("idTask") Task task) {
-        task.getGetIdList();
-        return task;
+    @GetMapping("/{id}")
+    public TaskResponse getTask(@PathVariable("id") UUID taskId, @PathVariable("listId") UUID listId) throws NotFoundException {
+        return iTaskService.getTask(taskId, listId);
     }
 
     @PostMapping
-    @JsonView(Views.ShowField.class)
-    public Task create (@RequestBody Task task) {
-        if (task.getImportant() != null && task.getImportant() < 1 || task.getImportant() != null && task.getImportant() > 5) {
-            throw new ImportantIncorrectNumberException();
-        }
-        task.setCreationDate(LocalDateTime.now());
-        task.setChangeDate(LocalDateTime.now());
-        return taskRepository.save(task);
+    public TaskResponse createTask(@RequestBody @Valid CreateTaskRequest createTaskRequest,
+            @PathVariable("listId") UUID listId) throws NotFoundException {
+        return iTaskService.createTask(createTaskRequest, listId);
     }
 
-    @PutMapping("/{idTask}")
-    @JsonView(Views.ShowField.class)
-    public Task update (@PathVariable("idTask") Task taskFromDb,                       //если прилетают 2 параметра, возможно поможет if()
-            @RequestBody Task task) {
-        if (task.getCheckpoint() == null) {
-            throw new CheckpointNullException();
-        }
-        else {
-        taskFromDb.setCheckpoint(task.getCheckpoint());
-        taskFromDb.setChangeDate(LocalDateTime.now());
-        return taskRepository.save(taskFromDb);
-        }
+    @PutMapping("/{id}")               //скорее всего неправильно
+    public TaskResponse updateTask(@RequestBody @Valid ChangeTaskRequest changeTaskRequest,
+            @PathVariable("id") UUID taskId,
+            @PathVariable("listId") UUID listId) throws NotFoundException {
+        return iTaskService.changeTask(changeTaskRequest, taskId, listId);
     }
 
-    @DeleteMapping("/{idTask}")
-    public void delete (@PathVariable("idTask") Task task) {
-        taskRepository.delete(task);
+    @DeleteMapping("/{id}")
+    public void deleteTask(@PathVariable("id") UUID taskId, @PathVariable("listId") UUID listId) throws NotFoundException {
+        iTaskService.deleteTask(taskId, listId);
     }
 
 }
