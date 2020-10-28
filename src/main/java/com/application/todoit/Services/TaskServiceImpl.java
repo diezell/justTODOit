@@ -54,7 +54,8 @@ public class TaskServiceImpl implements ITaskService {
     @Override
     public TaskResponse changeTask(ChangeTaskRequest changeTaskRequest, UUID taskId, UUID listId) throws NotFoundException {
         Optional<Task> taskOptional = taskRepository.findById(taskId);
-        if (taskOptional.isEmpty()) {
+        if (taskOptional == null) {
+        //if (taskOptional.isEmpty()) {                                            //чтобы заработало нужна 14 джава, а не 1.8
             throw new NotFoundException(String.format("Task %s", taskId));
         }
         if (!listOfTasksRepository.existsById(listId)) {
