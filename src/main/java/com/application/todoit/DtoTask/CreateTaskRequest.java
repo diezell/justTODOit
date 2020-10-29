@@ -1,11 +1,10 @@
 package com.application.todoit.DtoTask;
 
 import lombok.Data;
-
 import java.io.Serializable;
 
 /**
- * Запрос на создание задания
+ * ДТО - запрос на создание задания
  */
 @Data
 public class CreateTaskRequest implements Serializable {

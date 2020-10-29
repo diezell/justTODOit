@@ -1,13 +1,12 @@
 package com.application.todoit.Models;
 
-import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * Java-doc
+ * Сущность списка
  */
 @Data
 @Entity

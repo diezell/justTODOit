@@ -1,17 +1,14 @@
 package com.application.todoit.DtoTask;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
-
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Ответ на запросы о заданиях
+ * ДТО - ответ на запросы о заданиях
  */
 @Data
 public class TaskResponse implements Serializable {
@@ -33,4 +30,5 @@ public class TaskResponse implements Serializable {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime changeDate;
+
 }

@@ -1,11 +1,9 @@
 package com.application.todoit.Models;
 
-import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import lombok.Data;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.UUID;
 
 /**
  * Сущность задания
@@ -33,6 +31,5 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listoftasks_id")
     private ListOfTasks listOfTasks;
-
 
 }

@@ -1,19 +1,18 @@
 package com.application.todoit.Services;
 
-
 import com.application.todoit.Dto.*;
+import com.application.todoit.DtoTask.TaskResponse;
 import com.application.todoit.Exceptions.NotFoundException;
 import com.application.todoit.Interfaces.*;
 import com.application.todoit.Models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.*;
 
 /**
- * Реализация TaskListService
+ * Сервис списков
  */
 @Service
 @Transactional
@@ -23,6 +22,11 @@ public class TaskListServiceImpl implements IListService{
 
     private final TaskRepository taskRepository;
 
+    /**
+     * Конструктор для репозиториев
+     * @param listOfTasksRepository - репозиторий списков
+     * @param taskRepository - репозиторий заданий
+     */
     @Autowired
     public TaskListServiceImpl(ListOfTasksRepository listOfTasksRepository, TaskRepository taskRepository) {
         this.listOfTasksRepository = listOfTasksRepository;
@@ -31,13 +35,26 @@ public class TaskListServiceImpl implements IListService{
 
     @Override
     public ListsResponse getLists() {
+        List<ListOfTasks> listOfTasks = listOfTasksRepository.findAll();
         ListsResponse listsResponse = new ListsResponse();
+        List<TaskListResponse> scheduleLists = new ArrayList<>();
+        for (ListOfTasks list : listOfTasks) {
+            TaskListResponse newList = new TaskListResponse();
+            newList.setId(list.getId());
+            newList.setName(list.getName());
+            newList.setDescription(list.getDescription());
+            newList.setCreationDate(list.getCreationDate());
+            newList.setChangeDate(list.getChangeDate());
+            scheduleLists.add(newList);
+        }
+        listsResponse.setLists(scheduleLists);
         return listsResponse;
     }
 
     @Override
     public FullTaskListResponse getList(UUID listId) throws NotFoundException {
-        ListOfTasks taskLists = listOfTasksRepository.findById(listId).orElseThrow(() -> new NotFoundException(String.format("List %s", listId)));
+        ListOfTasks taskLists = listOfTasksRepository.findById(listId)
+                .orElseThrow(() -> new NotFoundException(String.format("List %s", listId)));
         FullTaskListResponse fullTaskListResponse = new FullTaskListResponse();
         fullTaskListResponse.setId(taskLists.getId());
         fullTaskListResponse.setName(taskLists.getName());
@@ -62,7 +79,8 @@ public class TaskListServiceImpl implements IListService{
 
     @Override
     public TaskListResponse changeList(ListRequest listRequest, UUID listId) throws NotFoundException{
-        ListOfTasks taskList = listOfTasksRepository.findById(listId).orElseThrow(() -> new NotFoundException(String.format("List %s", listId)));
+        ListOfTasks taskList = listOfTasksRepository.findById(listId)
+                .orElseThrow(() -> new NotFoundException(String.format("List %s", listId)));
         taskList.setName(listRequest.getName());
         taskList.setChangeDate(LocalDateTime.now());
         return generateTaskListResponse(taskList);
@@ -70,6 +88,18 @@ public class TaskListServiceImpl implements IListService{
 
     @Override
     public void deleteList(UUID listId) {
+        List<TaskResponse> tasks = new ArrayList<>();
+        for (Task x : taskRepository.findAll()) {
+            TaskResponse taskResponse = new TaskResponse();
+            taskResponse.setListId(x.getListOfTasks().getId());
+            taskResponse.setId(x.getId());
+            tasks.add(taskResponse);
+        }
+        for (TaskResponse x : tasks) {
+            if (x.getListId().equals(listId)) {
+                taskRepository.deleteById(x.getId());
+            }
+        }
         listOfTasksRepository.deleteById(listId);
     }
 
@@ -82,4 +112,5 @@ public class TaskListServiceImpl implements IListService{
         taskListResponse.setChangeDate(entity.getChangeDate());
         return taskListResponse;
     }
+
 }

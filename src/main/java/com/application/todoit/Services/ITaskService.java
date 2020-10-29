@@ -2,20 +2,36 @@ package com.application.todoit.Services;
 
 import com.application.todoit.DtoTask.*;
 import com.application.todoit.Exceptions.NotFoundException;
-import com.application.todoit.Interfaces.TaskRepository;
-
 import java.util.UUID;
 
 /**
- * Сервис заданий
+ * Интерфейс сериса заданий
  */
 public interface ITaskService {
 
-    TaskResponse getTask(UUID taskId, UUID listId) throws NotFoundException;
+    /**
+     * Метод для получения всех заданий определенного списка
+     */
+    TasksResponse getTasks(UUID listId) throws NotFoundException;
 
+    /**
+     * Метод для получения одного задания
+     */
+    TaskResponse getTask(UUID taskId) throws NotFoundException;
+
+    /**
+     * Метод для создания задания
+     */
     TaskResponse createTask(CreateTaskRequest createTaskRequest, UUID listId) throws NotFoundException;
 
-    TaskResponse changeTask(ChangeTaskRequest changeTaskRequest, UUID taskId, UUID listId) throws NotFoundException;
+    /**
+     * Метод для изменения задания
+     */
+    TaskResponse changeTask(ChangeTaskRequest changeTaskRequest, UUID taskId) throws NotFoundException;
 
-    void deleteTask(UUID taskId, UUID listId) throws NotFoundException;
+    /**
+     * Метод для удаления задания
+     */
+    void deleteTask(UUID taskId) throws NotFoundException;
+
 }

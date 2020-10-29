@@ -6,17 +6,17 @@ package com.application.todoit.Exceptions;
 public class ApplicationException extends Exception {
 
     /**
-     * @param message Сообщение исключения
+     * @param message - сообщение исключения
      */
     public ApplicationException(String message) {
         super(message);
     }
 
     /**
-     * @param message Сообщение исключения
-     * @param cause   Причина исключения
+     * @param message - сообщение исключения
+     * @param throwable - причина исключения
      */
-    public ApplicationException(String message, Throwable cause) {
-        super(message, cause);
+    public ApplicationException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 }

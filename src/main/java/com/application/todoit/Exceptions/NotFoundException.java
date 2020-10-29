@@ -1,12 +1,12 @@
 package com.application.todoit.Exceptions;
 
 /**
- * Исключение для ситуаций "не найдено"
+ * Исключение для ненайденных запросов
  */
 public class NotFoundException extends ApplicationException {
 
     /**
-     * @param message тип или название ненайденного объекта
+     * @param message - сообщение исключения
      */
     public NotFoundException(String message) {
         super(message);
