@@ -31,9 +31,10 @@ public class ListOfTasksController {
      * GET-запрос на получение всех списков
      * @return - возвращает все списки
      */
+
     @GetMapping
-    public ListsResponse getLists() {
-        return iListService.getLists();
+    public ListsResponse getLists(String sort) {
+        return iListService.getLists(sort);
     }
 
     /**
@@ -73,7 +74,7 @@ public class ListOfTasksController {
      * @param listId - id удаляемого списка
      */
     @DeleteMapping("/{id}")
-    public void deleteList(@PathVariable("id") UUID listId) {
+    public void deleteList(@PathVariable("id") UUID listId) throws NotFoundException{
         iListService.deleteList(listId);
     }
 

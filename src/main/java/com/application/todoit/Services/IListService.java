@@ -12,7 +12,7 @@ public interface IListService {
     /**
      * Метод для получения всех списков
      */
-    ListsResponse getLists();
+    ListsResponse getLists(String sort);
 
     /**
      * Метод для получения одного
@@ -32,6 +32,6 @@ public interface IListService {
     /**
      * Метод для удаления списка
      */
-    void deleteList(UUID listId);
+    void deleteList(UUID listId) throws NotFoundException;
 
 }

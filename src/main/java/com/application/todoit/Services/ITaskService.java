@@ -12,7 +12,7 @@ public interface ITaskService {
     /**
      * Метод для получения всех заданий определенного списка
      */
-    TasksResponse getTasks(UUID listId) throws NotFoundException;
+    TasksResponse getTasks(UUID listId, String sort, String filter) throws NotFoundException;
 
     /**
      * Метод для получения одного задания

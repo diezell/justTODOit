@@ -1,5 +1,6 @@
 package com.application.todoit.Models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,8 +22,10 @@ public class ListOfTasks {
 
     private String description;
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime creationDate;
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime changeDate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "listOfTasks")

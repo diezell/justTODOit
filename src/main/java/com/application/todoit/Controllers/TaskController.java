@@ -31,8 +31,8 @@ public class TaskController {
      * @return - возвращает список заданий
      */
     @GetMapping("/ofList/{listId}")
-    public TasksResponse getTasks(@PathVariable("listId") UUID listId) throws NotFoundException {
-        return iTaskService.getTasks(listId);
+    public TasksResponse getTasks(@PathVariable("listId") UUID listId, String sort, String filter) throws NotFoundException {
+        return iTaskService.getTasks(listId, sort, filter);
     }
 
     /**

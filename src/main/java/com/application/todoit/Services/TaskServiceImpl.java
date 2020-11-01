@@ -1,5 +1,6 @@
 package com.application.todoit.Services;
 
+import com.application.todoit.DtoTask.TaskResponse;
 import com.application.todoit.DtoTask.*;
 import com.application.todoit.Exceptions.NotFoundException;
 import com.application.todoit.Interfaces.*;
@@ -33,7 +34,7 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     @Override
-    public TasksResponse getTasks(UUID listId) throws NotFoundException {
+    public TasksResponse getTasks(UUID listId, String sort, String filter) throws NotFoundException {
         List<Task> tasks = taskRepository.findAll();
         List<TaskResponse> taskResponse = new ArrayList<>();
         for (Task x : tasks) {
@@ -55,6 +56,79 @@ public class TaskServiceImpl implements ITaskService {
             }
         }
         TasksResponse tasksResponse = new TasksResponse();
+
+        if ("changeLast".equals(sort)) {
+            tasksById.sort(new Comparator<TaskResponse>() {
+                @Override
+                public int compare(TaskResponse t, TaskResponse t1) {
+                    return t.getChangeDate().compareTo(t1.getChangeDate());
+                }
+            });
+            Collections.reverse(tasksById);
+        }
+        else if ("changeFirst".equals(sort)) {
+            tasksById.sort(new Comparator<TaskResponse>() {
+                @Override
+                public int compare(TaskResponse t, TaskResponse t1) {
+                    return t.getChangeDate().compareTo(t1.getChangeDate());
+                }
+            });
+        }
+
+        if ("createLast".equals(sort)) {
+            tasksById.sort(new Comparator<TaskResponse>() {
+                @Override
+                public int compare(TaskResponse t, TaskResponse t1) {
+                    return t.getCreationDate().compareTo(t1.getCreationDate());
+                }
+            });
+            Collections.reverse(tasksById);
+        }
+        else if ("createFirst".equals(sort)) {
+            tasksById.sort(new Comparator<TaskResponse>() {
+                @Override
+                public int compare(TaskResponse t, TaskResponse t1) {
+                    return t.getCreationDate().compareTo(t1.getCreationDate());
+                }
+            });
+        }
+
+        if ("nameLast".equals(sort)) {
+            tasksById.sort(new Comparator<TaskResponse>() {
+                @Override
+                public int compare(TaskResponse t, TaskResponse t1) {
+                    return t.getName().compareToIgnoreCase(t1.getName());
+                }
+            });
+            Collections.reverse(tasksById);
+        }
+        else if ("nameFirst".equals(sort)) {
+            tasksById.sort(new Comparator<TaskResponse>() {
+                @Override
+                public int compare(TaskResponse t, TaskResponse t1) {
+                    return t.getName().compareToIgnoreCase(t1.getName());
+                }
+            });
+        }
+
+        if ("done".equals(filter)) {
+            List<TaskResponse> doneTasks = new ArrayList<>();
+            for (TaskResponse x : tasksById) {
+                if (x.isMarkDone()) {
+                    doneTasks.add(x);
+                }
+            }
+            tasksById = doneTasks;
+        }
+        if ("notDone".equals(filter)) {
+            List<TaskResponse> notDoneTasks = new ArrayList<>();
+            for (TaskResponse x : tasksById) {
+                if (!x.isMarkDone()) {
+                    notDoneTasks.add(x);
+                }
+            }
+            tasksById = notDoneTasks;
+        }
         tasksResponse.setTasks(tasksById);
         return tasksResponse;
     }
@@ -95,6 +169,7 @@ public class TaskServiceImpl implements ITaskService {
 
     @Override
     public TaskResponse changeTask(ChangeTaskRequest changeTaskRequest, UUID taskId) throws NotFoundException {
+        taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException(String.format("Task %s", taskId)));
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         Task task = taskOptional.get();
         task.setMarkDone(changeTaskRequest.isMarkDone());
@@ -105,6 +180,7 @@ public class TaskServiceImpl implements ITaskService {
 
     @Override
     public void deleteTask(UUID taskId) throws NotFoundException {
+        taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException(String.format("Task %s", taskId)));
         taskRepository.deleteById(taskId);
     }
 

@@ -2,7 +2,7 @@ package com.application.todoit.Services;
 
 import com.application.todoit.Dto.*;
 import com.application.todoit.DtoTask.TaskResponse;
-import com.application.todoit.Exceptions.NotFoundException;
+import com.application.todoit.Exceptions.*;
 import com.application.todoit.Interfaces.*;
 import com.application.todoit.Models.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class TaskListServiceImpl implements IListService{
     }
 
     @Override
-    public ListsResponse getLists() {
+    public ListsResponse getLists(String sort) {
         List<ListOfTasks> listOfTasks = listOfTasksRepository.findAll();
         ListsResponse listsResponse = new ListsResponse();
         List<TaskListResponse> scheduleLists = new ArrayList<>();
@@ -46,6 +46,60 @@ public class TaskListServiceImpl implements IListService{
             newList.setCreationDate(list.getCreationDate());
             newList.setChangeDate(list.getChangeDate());
             scheduleLists.add(newList);
+        }
+
+        if ("changeLast".equals(sort)) {
+            scheduleLists.sort(new Comparator<TaskListResponse>() {
+                @Override
+                public int compare(TaskListResponse t, TaskListResponse t1) {
+                    return t.getChangeDate().compareTo(t1.getChangeDate());
+                }
+            });
+            Collections.reverse(scheduleLists);
+        }
+        else if ("changeFirst".equals(sort)) {
+            scheduleLists.sort(new Comparator<TaskListResponse>() {
+                @Override
+                public int compare(TaskListResponse t, TaskListResponse t1) {
+                    return t.getChangeDate().compareTo(t1.getChangeDate());
+                }
+            });
+        }
+
+        if ("createLast".equals(sort)) {
+            scheduleLists.sort(new Comparator<TaskListResponse>() {
+                @Override
+                public int compare(TaskListResponse t, TaskListResponse t1) {
+                    return t.getCreationDate().compareTo(t1.getCreationDate());
+                }
+            });
+            Collections.reverse(scheduleLists);
+        }
+        else if ("createFirst".equals(sort)) {
+            scheduleLists.sort(new Comparator<TaskListResponse>() {
+                @Override
+                public int compare(TaskListResponse t, TaskListResponse t1) {
+                    return t.getCreationDate().compareTo(t1.getCreationDate());
+                }
+            });
+        }
+
+        if ("nameLast".equals(sort)) {
+            scheduleLists.sort(new Comparator<TaskListResponse>() {
+                @Override
+                public int compare(TaskListResponse t, TaskListResponse t1) {
+                    return t.getName().compareToIgnoreCase(t1.getName());
+                }
+            });
+            Collections.reverse(scheduleLists);
+        }
+        else if ("nameFirst".equals(sort)) {
+            scheduleLists.sort(new Comparator<TaskListResponse>() {
+                @Override
+                public int compare(TaskListResponse t, TaskListResponse t1) {
+                    return t.getName().compareToIgnoreCase(t1.getName());
+                }
+            });
         }
         listsResponse.setLists(scheduleLists);
         return listsResponse;
@@ -66,6 +120,9 @@ public class TaskListServiceImpl implements IListService{
 
     @Override
     public TaskListResponse createList(ListRequest listRequest) {
+        if (listRequest.getName().isEmpty() || listRequest.getName() == null) {
+            throw new ThereIsIncorrectNameException();
+        }
         ListOfTasks taskList = new ListOfTasks();
         LocalDateTime time = LocalDateTime.now();
         taskList.setId(UUID.randomUUID());
@@ -79,6 +136,9 @@ public class TaskListServiceImpl implements IListService{
 
     @Override
     public TaskListResponse changeList(ListRequest listRequest, UUID listId) throws NotFoundException{
+        if (listRequest.getName().isEmpty() || listRequest.getName() == null) {
+            throw new ThereIsIncorrectNameException();
+        }
         ListOfTasks taskList = listOfTasksRepository.findById(listId)
                 .orElseThrow(() -> new NotFoundException(String.format("List %s", listId)));
         taskList.setName(listRequest.getName());
@@ -87,7 +147,8 @@ public class TaskListServiceImpl implements IListService{
     }
 
     @Override
-    public void deleteList(UUID listId) {
+    public void deleteList(UUID listId) throws NotFoundException{
+        listOfTasksRepository.findById(listId).orElseThrow(() -> new NotFoundException(String.format("List %s", listId)));
         List<TaskResponse> tasks = new ArrayList<>();
         for (Task x : taskRepository.findAll()) {
             TaskResponse taskResponse = new TaskResponse();

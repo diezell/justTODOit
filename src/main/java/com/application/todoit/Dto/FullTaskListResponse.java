@@ -1,6 +1,7 @@
 package com.application.todoit.Dto;
 
 import com.application.todoit.DtoTask.TaskResponse;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
@@ -21,9 +22,11 @@ public class FullTaskListResponse implements Serializable {
     private String description;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime creationDate;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime changeDate;
 
     private List<TaskResponse> tasks;

@@ -1,5 +1,6 @@
 package com.application.todoit.DtoTask;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
@@ -26,9 +27,11 @@ public class TaskResponse implements Serializable {
     private boolean markDone;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime creationDate;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime changeDate;
 
 }
