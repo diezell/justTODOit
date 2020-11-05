@@ -1,19 +1,42 @@
 package com.application.todoit.Services;
 
-import com.application.todoit.Models.User;
+import com.application.todoit.Interfaces.*;
+import com.application.todoit.Models.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+@Service
+public class UserService {
 
-public interface UserService {
+    @Autowired
+    private UserEntityRepository userEntityRepository;
 
-    User register(User user);
+    @Autowired
+    private RoleEntityRepository roleEntityRepository;
 
-    List<User> getAll();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    User findByUsername(String username);
+    public UserEntity saveUser(UserEntity userEntity) {
+        RoleEntity userRole = roleEntityRepository.findByName("ROLE_USER");
+        userEntity.setRoleEntity(userRole);
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        return userEntityRepository.save(userEntity);
+    }
 
-    User findById(UUID id);
+    public UserEntity findByLogin(String login) {
+        return userEntityRepository.findByLogin(login);
+    }
 
-    void delete(UUID id);
+    public UserEntity findByLoginAndPassword(String login, String password) {
+        UserEntity userEntity = findByLogin(login);
+        if (userEntity != null) {
+            if (passwordEncoder.matches(password, userEntity.getPassword())) {
+                return userEntity;
+            }
+        }
+        return null;
+    }
 
 }
